@@ -1,0 +1,23 @@
+body {
+  background-color: #f8f9fb;
+}
+
+.calendar-title {
+  text-align: center;
+  font-weight: 700;
+  margin: 20px 0;
+}
+
+.calendar-title__only {
+  color: #00a8ff;
+}
+
+.calendar-title__plans {
+  color: #f06292;
+}
+
+.fc {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+}
