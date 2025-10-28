@@ -1,9 +1,10 @@
 <?php
-$server = '127.0.0.1';
-$port = 8889;
+$server = 'localhost';
+$port = 8888;
 $username = 'root';
 $password = 'root';
 $database = 'mydatabase';
+
 
 $connection = mysqli_connect($server, $username, $password, $database, $port);
 if (!$connection) {
