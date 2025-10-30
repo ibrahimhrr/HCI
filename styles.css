@@ -16,8 +16,265 @@ body {
   color: #f06292;
 }
 
+/* ===== SIMPLIFIED FULLCALENDAR BUTTON STYLING ===== */
+.fc-createEventBtn-button.btn-primary {
+  background: linear-gradient(45deg, #007bff, #0056b3) !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.fc-createEventBtn-button.btn-primary:hover {
+  background: linear-gradient(45deg, #007bff, #0056b3) !important; /* Keep same color */
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4) !important;
+  border: none !important;
+}
+
+.fc-smartSuggestBtn-button.btn-info {
+  background: linear-gradient(45deg, #17a2b8, #138496) !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.fc-smartSuggestBtn-button.btn-info:hover {
+  background: linear-gradient(45deg, #17a2b8, #138496) !important; /* Keep same color */
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4) !important;
+  border: none !important;
+}
+
+.fc-today-button.btn-warning {
+  background: linear-gradient(45deg, #ffc107, #e0a800) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* Keep the enhanced grid styling */
+.fc-view-container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+/* Keep the enhanced grid styling */
+
+/* Responsive behavior for both custom buttons */
+@media (max-width: 768px) {
+  .fc-smartSuggestBtn-button {
+    font-size: 11px !important;
+    padding: 6px 14px !important;
+    margin-left: 5px !important;
+    min-width: 100px !important;
+  }
+  
+  .fc-createEventBtn-button {
+    margin-left: 5px !important;
+    font-size: 11px !important;
+    padding: 6px 14px !important;
+    min-width: 90px !important;
+  }
+  
+  .fc-button {
+    font-size: 10px !important;
+    padding: 4px 12px !important;
+    min-height: 28px !important;
+  }
+  
+  .fc-toolbar h2 {
+    font-size: 18px !important;
+  }
+  
+  .fc-toolbar {
+    padding: 10px 15px;
+  }
+}
+
+/* Enhanced event styling */
+.fc-event {
+  border-radius: 8px !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  font-weight: 600 !important;
+  padding: 2px 6px !important;
+}
+
+.fc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Calendar container styling */
+#calendar {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin: 20px 0;
+}
+
 .fc {
   background-color: #fff;
   border-radius: 8px;
   padding: 16px;
+}
+
+/* ===== ENHANCED CALENDAR GRID STYLING ===== */
+.fc-view-container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+/* Darker, more prominent grid lines */
+.fc-widget-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+  border: 1px solid #dee2e6 !important;
+  font-weight: 700 !important;
+  color: #495057 !important;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.fc-widget-content {
+  border: 1px solid #dee2e6 !important;
+  background: white;
+}
+
+.fc-day-grid .fc-row {
+  border-bottom: 1px solid #dee2e6 !important;
+}
+
+.fc-day-grid .fc-content-skeleton table,
+.fc-day-grid .fc-content-skeleton td {
+  border: 1px solid #dee2e6 !important;
+}
+
+/* More prominent borders for calendar cells */
+.fc-day {
+  border: 1px solid #dee2e6 !important;
+  background: #fdfdfd;
+  transition: background-color 0.2s ease;
+}
+
+.fc-day:hover {
+  background: #f8f9fa !important;
+}
+
+.fc-today {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+  border: 1px solid #2196f3 !important;
+}
+
+.fc-past {
+  background: #fafafa !important;
+  color: #9e9e9e;
+}
+
+.fc-future {
+  background: white !important;
+}
+
+/* Enhanced header styling */
+.fc-toolbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 15px 20px;
+  border-radius: 15px 15px 0 0;
+  margin-bottom: 0 !important;
+}
+
+.fc-toolbar h2 {
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 24px !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Simple button enhancements */
+.fc-button.btn {
+  margin: 0 2px !important;
+  transition: all 0.2s ease !important;
+}
+
+.fc-button.btn:hover {
+  transform: translateY(-1px) !important;
+}
+
+.fc-button.btn:active {
+  transform: translateY(0) !important;
+}
+
+/* ===== OVERALL CALENDAR ENHANCEMENTS ===== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Add subtle animation to calendar load */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#calendar {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Enhanced list view styling */
+.fc-list-view .fc-list-item {
+  border-left: 4px solid #667eea !important;
+  background: white !important;
+  border-radius: 8px !important;
+  margin: 5px 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.fc-list-view .fc-list-item:hover {
+  background: #f8f9fa !important;
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Week and day view enhancements */
+.fc-time-grid .fc-slats td {
+  border-top: 1px solid #e9ecef !important;
+}
+
+.fc-time-grid .fc-content-skeleton {
+  padding: 0 2px;
+}
+
+/* Custom scrollbar for better appearance */
+.fc-scroller::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fc-scroller::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
