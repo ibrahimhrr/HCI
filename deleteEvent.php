@@ -7,8 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $eventId = $_POST['eventId'] ?? '';
     
     // Validate required fields
-    if (empty($eventId)) {
-        echo json_encode(['success' => false, 'message' => 'Event ID is required']);
+    if (empty($eventId) || !is_numeric($eventId)) {
+        echo json_encode(['success' => false, 'message' => 'Valid event ID is required']);
         exit;
     }
     
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = mysqli_prepare($connection, $query);
     
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "s", $eventId);
+        mysqli_stmt_bind_param($stmt, "i", $eventId);
         
         if (mysqli_stmt_execute($stmt)) {
             if (mysqli_stmt_affected_rows($stmt) > 0) {

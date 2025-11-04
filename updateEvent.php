@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $startTime = $_POST['startTime'] ?? '';
     $endDate = $_POST['endDate'] ?? '';
     $endTime = $_POST['endTime'] ?? '';
+    $color = $_POST['color'] ?? '#3788d8'; // Default blue color
     
     // Validate required fields
     if (empty($eventId) || empty($title) || empty($startDate) || empty($startTime) || empty($endDate) || empty($endTime)) {
@@ -28,11 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Prepare and execute update query
-    $query = "UPDATE table_event SET title = ?, start_date = ?, end_date = ? WHERE id = ?";
+    $query = "UPDATE table_event SET title = ?, start_date = ?, start_time = ?, end_date = ?, end_time = ?, color = ? WHERE id = ?";
     $stmt = mysqli_prepare($connection, $query);
     
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "ssss", $title, $startDateTime, $endDateTime, $eventId);
+        mysqli_stmt_bind_param($stmt, "sssssss", $title, $startDate, $startTime, $endDate, $endTime, $color, $eventId);
         
         if (mysqli_stmt_execute($stmt)) {
             if (mysqli_stmt_affected_rows($stmt) > 0) {

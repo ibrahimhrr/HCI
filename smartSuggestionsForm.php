@@ -10,7 +10,7 @@
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
@@ -89,7 +89,7 @@
         <a href="index.php" class="back-button">← Back to Calendar</a>
         
         <h2 style="color: white; text-align: center; margin-bottom: 30px;">
-            🤖 Smart Event Suggestions
+            Smart Event Suggestions
         </h2>
         
         <div class="suggestions-form">
@@ -178,7 +178,7 @@
         
         <div id="suggestionsResults" style="display: none;">
             <h3 style="color: white; text-align: center; margin-bottom: 20px;">
-                ✨ Recommended Time Slots
+                Recommended Time Slots
             </h3>
             <div id="suggestionsList"></div>
         </div>

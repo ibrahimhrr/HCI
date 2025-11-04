@@ -152,6 +152,42 @@
   color: #6c757d;
   margin-top: 5px;
 } 
+
+/* Color selector styling */
+#event_color {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  padding: 12px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#event_color:focus {
+  border-color: #00a8ff;
+  box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.1);
+}
+
+#event_color option {
+  padding: 10px;
+  font-weight: 600;
+}
+
+/* Preview color box */
+.color-preview {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-left: 10px;
+  border: 2px solid #ddd;
+  vertical-align: middle;
+  transition: all 0.3s ease;
+}
 </style>
 <?php 
 include('connection.php');
@@ -171,12 +207,18 @@ if(isset($_REQUEST['save-event']))
   $start_time = $_REQUEST['start_time'];
   $end_date = $_REQUEST['end_date'];
   $end_time = $_REQUEST['end_time'];
+  $event_color = $_REQUEST['event_color'] ?? '#3788d8'; // Default blue color
   
   // Combine date and time for database storage as datetime
   $start_datetime = $start_date . ' ' . $start_time . ':00';
   $end_datetime = $end_date . ' ' . $end_time . ':00';
 
-  $insert_query = mysqli_query($connection, "insert into table_event set title='$title', start_date='$start_datetime', end_date='$end_datetime'");
+    $insert_query = mysqli_query(
+    $connection,
+    "INSERT INTO table_event 
+     (title, start_date, start_time, end_date, end_time, color)
+     VALUES ('$title', '$start_date', '$start_time', '$end_date', '$end_time', '$event_color')"
+  );
   if($insert_query)
   {
     header('location:index.php');
@@ -194,8 +236,8 @@ if(isset($_REQUEST['save-event']))
         <h3 class="form-title">Create New Event</h3>
         
         <?php if ($fromSuggestions): ?>
-        <div class="alert alert-info" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
-            <strong>✨ Smart Suggestion Applied!</strong><br>
+        <div class="alert alert-info" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white; border: none; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
+            <strong>Smart Suggestion Applied!</strong><br>
             This time slot was automatically selected based on your calendar analysis.
         </div>
         <?php endif; ?>
@@ -238,12 +280,26 @@ if(isset($_REQUEST['save-event']))
                   value="<?php echo htmlspecialchars($prefilled_end_time); ?>"/>
            <div class="time-helper">Type time in 24-hour format (e.g., 16:30 for 4:30 PM)</div>
           </div>
+          
+           <div class="form-group">
+           <label for="event_color">Event Color <span class="color-preview" id="colorPreview"></span></label>
+           <select name="event_color" id="event_color" class="form-control" style="height: 50px;">
+               <option value="#3788d8" style="background-color: #3788d8; color: white;">🔵 Blue (Default)</option>
+               <option value="#28a745" style="background-color: #28a745; color: white;">🟢 Green (Work)</option>
+               <option value="#dc3545" style="background-color: #dc3545; color: white;">🔴 Red (Important)</option>
+               <option value="#ffc107" style="background-color: #ffc107; color: black;">🟡 Yellow (Personal)</option>
+               <option value="#6f42c1" style="background-color: #6f42c1; color: white;">🟣 Purple (Health)</option>
+               <option value="#fd7e14" style="background-color: #fd7e14; color: white;">🟠 Orange (Social)</option>
+               <option value="#20c997" style="background-color: #20c997; color: white;">🔵 Teal (Study)</option>
+               <option value="#e83e8c" style="background-color: #e83e8c; color: white;">🩷 Pink (Family)</option>
+               <option value="#6c757d" style="background-color: #6c757d; color: white;">⚫ Gray (Meetings)</option>
+           </select>
+           <div class="time-helper">Choose a color to categorize your event</div>
+          </div>
           <div class="form-group">
            <input type="submit" id="save-event" name="save-event" value="Save Event" class="btn btn-success" />
            </div>
-           <?php if(!empty($msg)): ?>
-             <p class="error"><?php echo $msg; ?></p>
-           <?php endif; ?>
+           <div id="message-container"></div>
          </form>
          </div>
        </div>  
@@ -251,6 +307,63 @@ if(isset($_REQUEST['save-event']))
       
     <script>
     $(document).ready(function() {
+        // Initialize color preview
+        function updateColorPreview() {
+            const selectedColor = $('#event_color').val();
+            $('#colorPreview').css('background-color', selectedColor);
+        }
+        
+        // Set initial color preview
+        updateColorPreview();
+        
+        // Update color preview when selection changes
+        $('#event_color').on('change', updateColorPreview);
+        
+        // Handle form submission with AJAX
+        $('#event-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            $('#save-event').prop('disabled', true).val('🔄 Creating Event...');
+            $('#message-container').empty();
+            
+            $.ajax({
+                url: 'createEvent.php',
+                method: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Show success message
+                        $('#message-container').html(`
+                            <div class="success">
+                                ✅ ${response.message}<br>
+                                <small>Redirecting to calendar...</small>
+                            </div>
+                        `);
+                        
+                        // Redirect to calendar after short delay
+                        setTimeout(function() {
+                            window.location.href = 'index.php';
+                        }, 1500);
+                    } else {
+                        $('#message-container').html(`
+                            <div class="error">❌ ${response.message}</div>
+                        `);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#message-container').html(`
+                        <div class="error">❌ Error creating event. Please try again.</div>
+                    `);
+                },
+                complete: function() {
+                    // Reset button state
+                    $('#save-event').prop('disabled', false).val('Save Event');
+                }
+            });
+        });
+        
         // Time input formatting and validation
         function formatTimeInput(input) {
             let value = input.val().replace(/[^\d]/g, ''); // Remove non-digits
