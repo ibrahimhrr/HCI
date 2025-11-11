@@ -1,11 +1,11 @@
 # 📅 OnlyPlans - Smart Calendar Application
 
-A modern, intelligent calendar system with AI-powered time slot suggestions and conflict detection.
+A modern, intelligent calendar system with Intelligent time slot suggestions and conflict detection.
 
 ## ✨ Features
 
 - **Smart Event Scheduling**: Create, edit, and delete events with color coding
-- **Intelligent Suggestions**: AI-powered algorithm finds optimal time slots based on:
+- **Intelligent Suggestions**:  algorithm finds optimal time slots based on:
   - Existing calendar conflicts
   - Preferred time windows (6 AM - 10 PM)
   - Quality scoring (excellent/good/fair/poor)
