@@ -37,9 +37,24 @@
    $('#calendar').fullCalendar({
            selectable: true,
            selectHelper: true,
-           select: function()
+           timeFormat: 'h(:mm)a', // Format time as "3pm" or "3:30pm"
+           displayEventTime: true,
+           displayEventEnd: false, // Don't show end time to save space
+           select: function(start, end)
            {
-               $('#myModal').modal('toggle');
+               // Redirect to create event form with pre-filled dates
+               // Always use the start date for both start and end (same-day events)
+               var startDateStr = moment(start).format('YYYY-MM-DD');
+               var startTimeStr = moment(start).format('HH:mm');
+               var endDateStr = startDateStr; // Use same date for end
+               var endTimeStr = moment(end).format('HH:mm');
+               
+               // If end time would be on next day or same as start, add 1 hour to start time
+               if (moment(end).format('YYYY-MM-DD') !== startDateStr || endTimeStr === startTimeStr) {
+                   endTimeStr = moment(start).add(1, 'hour').format('HH:mm');
+               }
+               
+               window.location.href = `createEventForm.php?start_date=${startDateStr}&start_time=${startTimeStr}&end_date=${endDateStr}&end_time=${endTimeStr}`;
            },
            
            // Add event click functionality for editing
@@ -79,30 +94,43 @@
                updateEventDateTime(event, revertFunc);
            },
            
-           // Double-click to create event
+           // Single click on a day to create event (in addition to select)
+           // This handles clicks on day numbers in month view
            dayClick: function(date, jsEvent, view) {
-               if (jsEvent.detail === 2) { // Double click
-                   var dateStr = date.format('YYYY-MM-DD');
-                   var timeStr = date.format('HH:mm');
-                   
-                   // Pre-fill create form
-                   window.location.href = `createEventForm.php?start_date=${dateStr}&start_time=${timeStr}&end_date=${dateStr}&end_time=${moment(date).add(1, 'hour').format('HH:mm')}`;
-               }
+               var dateStr = date.format('YYYY-MM-DD');
+               var timeStr = date.format('HH:mm');
+               
+               // Pre-fill create form
+               window.location.href = `createEventForm.php?start_date=${dateStr}&start_time=${timeStr}&end_date=${dateStr}&end_time=${moment(date).add(1, 'hour').format('HH:mm')}`;
            },
            
            // Enhanced event rendering with icons
            eventRender: function(event, element) {
                // Add icons based on event title keywords
                var icon = getEventIcon(event.title);
+               
+               // Format time inline with title for better display
+               var startTime = moment(event.start).format('h:mma');
+               var timePrefix = '<span style="font-weight: bold; margin-right: 4px;">' + startTime + '</span>';
+               
+               // Update the title with icon and inline time
                var originalTitle = element.find('.fc-title').text();
-               element.find('.fc-title').html(icon + ' ' + originalTitle);
+               element.find('.fc-title').html(timePrefix + icon + ' ' + originalTitle);
+               
+               // Ensure time element doesn't show separately (avoid duplication)
+               element.find('.fc-time').hide();
                
                // Add hover tooltip
-               element.attr('title', `${event.title}\n${moment(event.start).format('MMM DD, YYYY - HH:mm')} to ${moment(event.end).format('HH:mm')}`);
+               element.attr('title', `${event.title}\n${moment(event.start).format('MMM DD, YYYY - h:mma')} to ${moment(event.end).format('h:mma')}`);
                
-               // Add category-based styling
-               var category = getEventCategory(event.title);
-               element.addClass('event-category-' + category);
+               // Force the database color to be applied correctly
+               if (event.color) {
+                   element.css({
+                       'background-color': event.color,
+                       'background-image': 'none',
+                       'border-color': event.color
+                   });
+               }
                
                // Add right-click context menu for quick actions
                element.on('contextmenu', function(e) {
@@ -376,7 +404,7 @@
             if (titleLower.includes('shopping')) return '🛍️';
             if (titleLower.includes('coffee')) return '☕';
             if (titleLower.includes('presentation')) return '📊';
-            return '📅'; // Default icon
+            return ''; // No default icon
         }
         
         // Helper function to categorize events
@@ -805,7 +833,7 @@
                             <div class="form-group">
                                 <label for="editStartDate">Start Date</label>
                                 <input type="date" class="form-control" id="editStartDate" name="startDate" required
-                                       style="border-radius: 8px; padding: 12px;">
+                                       style="border-radius: 8px; padding: 8px 12px; height: 42px; line-height: 1.5;">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -823,7 +851,7 @@
                             <div class="form-group">
                                 <label for="editEndDate">End Date</label>
                                 <input type="date" class="form-control" id="editEndDate" name="endDate" required
-                                       style="border-radius: 8px; padding: 12px;">
+                                       style="border-radius: 8px; padding: 8px 12px; height: 42px; line-height: 1.5;">
                             </div>
                         </div>
                         <div class="col-md-6">

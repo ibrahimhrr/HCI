@@ -22,9 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $startDateTime = $startDate . ' ' . $startTime . ':00';
     $endDateTime = $endDate . ' ' . $endTime . ':00';
     
-    // Validate that end time is after start time
+    // Validate that end datetime is after start datetime (allows same day events)
     if (strtotime($endDateTime) <= strtotime($startDateTime)) {
-        echo json_encode(['success' => false, 'message' => 'End time must be after start time']);
+        echo json_encode(['success' => false, 'message' => 'End date/time must be after start date/time']);
         exit;
     }
     

@@ -1,232 +1,166 @@
 <?php
-include('connection.php');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Sm    // Fetch existing events in the date range
-    $query = "SELECT * FROM table_event WHERE DATE(start_date) >= ? AND DATE(start_date) <= ? ORDER BY start_date ASC";
-    $stmt = mysqli_prepare($connection, $query);
-    mysqli_stmt_bind_param($stmt, "ss", $startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);ggestions API endpoint
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $input = json_decode(file_get_contents('php://input'), true);
+include('connection.php');
+header('Content-Type: application/json');
+
+try {
+    $input = file_get_contents('php://input');
+    $data = json_decode($input, true);
     
-    $eventName = $input['eventName'] ?? '';
-    $duration = (int)($input['duration'] ?? 60); // duration in minutes
-    $timeRange = $input['timeRange'] ?? 'week'; // 'day', 'week', 'month'
-    $preferredStartHour = (int)($input['preferredStartHour'] ?? 9);
-    $preferredEndHour = (int)($input['preferredEndHour'] ?? 17);
+    if ($data === null) {
+        throw new Exception('Invalid JSON');
+    }
+
+    $eventName = $data['eventName'] ?? 'New Event';
+    $duration = $data['duration'] ?? 1;
+    $searchRange = $data['searchRange'] ?? 'this_week';
+    $preferredStartTime = $data['preferredStartTime'] ?? 9;
+    $preferredEndTime = $data['preferredEndTime'] ?? 17;
+    $maxSuggestions = $data['maxSuggestions'] ?? 5;
+
+    list($startDate, $endDate) = getSearchDateRange($searchRange);
+    $existingEvents = getExistingEvents($connection, $startDate, $endDate);
+    $potentialSlots = generateTimeSlots($startDate, $endDate, $duration, $preferredStartTime, $preferredEndTime);
+    $availableSlots = filterAvailableSlots($potentialSlots, $existingEvents);
+    $rankedSlots = rankSlots($availableSlots, $preferredStartTime, $preferredEndTime);
+    $topSuggestions = array_slice($rankedSlots, 0, $maxSuggestions);
+
+    echo json_encode($topSuggestions);
+    mysqli_close($connection);
     
-    $suggestions = findBestTimeSlots($connection, $eventName, $duration, $timeRange, $preferredStartHour, $preferredEndHour);
-    
-    header('Content-Type: application/json');
-    echo json_encode($suggestions);
-    exit;
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['error' => true, 'message' => $e->getMessage()]);
+    if (isset($connection)) mysqli_close($connection);
 }
 
-function findBestTimeSlots($connection, $eventName, $duration, $timeRange, $preferredStartHour, $preferredEndHour) {
-    // Get date range based on timeRange parameter
-    $startDate = new DateTime();
-    $endDate = new DateTime();
+function getSearchDateRange($range) {
+    $today = new DateTime();
+    $startDate = clone $today;
+    $endDate = clone $today;
     
-    switch ($timeRange) {
-        case 'day':
-            $endDate->modify('+1 day');
-            break;
-        case 'week':
-            $endDate->modify('+7 days');
-            break;
-        case 'month':
-            $endDate->modify('+30 days');
-            break;
-        default:
-            $endDate->modify('+7 days');
+    switch ($range) {
+        case 'today': $endDate = clone $startDate; break;
+        case 'tomorrow': $startDate->modify('+1 day'); $endDate = clone $startDate; break;
+        case 'this_week': $endDate->modify('+7 days'); break;
+        case 'next_week': $startDate->modify('+8 days'); $endDate->modify('+14 days'); break;
+        case 'this_month': $endDate = new DateTime('last day of this month'); break;
+        case 'next_month': $startDate = new DateTime('first day of next month'); $endDate = new DateTime('last day of next month'); break;
+        default: $endDate->modify('+7 days');
     }
     
-    // Fetch existing events in the date range
-    $query = "SELECT * FROM table_event WHERE DATE(start_date) >= ? AND DATE(start_date) <= ? ORDER BY start_date";
+    return [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')];
+}
+
+function getExistingEvents($connection, $startDate, $endDate) {
+    $events = [];
+    $query = "SELECT id, title, start_date, start_time, end_date, end_time FROM table_event WHERE start_date BETWEEN ? AND ? ORDER BY start_date, start_time";
     $stmt = mysqli_prepare($connection, $query);
-    mysqli_stmt_bind_param($stmt, "ss", $startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
+    mysqli_stmt_bind_param($stmt, "ss", $startDate, $endDate);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     
-    $existingEvents = [];
     while ($row = mysqli_fetch_assoc($result)) {
-        $existingEvents[] = $row;
+        $events[] = ['id' => $row['id'], 'title' => $row['title'], 'start' => $row['start_date'] . ' ' . $row['start_time'], 'end' => $row['end_date'] . ' ' . $row['end_time']];
     }
     
-    // Generate time slots and find best options
-    $suggestions = [];
-    $currentDate = clone $startDate;
+    mysqli_stmt_close($stmt);
+    return $events;
+}
+
+function generateTimeSlots($startDate, $endDate, $duration, $preferredStart, $preferredEnd) {
+    $slots = [];
+    $currentDate = new DateTime($startDate);
+    $endDateTime = new DateTime($endDate);
     
-    while ($currentDate <= $endDate && count($suggestions) < 5) {
-        // Skip weekends for work-related events (optional logic)
-        $dayOfWeek = $currentDate->format('N');
-        if ($dayOfWeek >= 6) { // Saturday = 6, Sunday = 7
-            $currentDate->modify('+1 day');
-            continue;
+    while ($currentDate <= $endDateTime) {
+        for ($hour = $preferredStart; $hour < $preferredEnd; $hour++) {
+            $slotStart = clone $currentDate;
+            $slotStart->setTime($hour, 0, 0);
+            $slotEnd = clone $slotStart;
+            $slotEnd->modify('+' . ($duration * 60) . ' minutes');
+            $slotEndHour = (int)$slotEnd->format('H');
+            
+            if ($slotEndHour <= $preferredEnd || $preferredEnd == 24) {
+                $slots[] = ['start' => $slotStart->format('Y-m-d H:i:s'), 'end' => $slotEnd->format('Y-m-d H:i:s')];
+            }
         }
-        
-        $dailySuggestions = findDailyTimeSlots(
-            $currentDate, 
-            $existingEvents, 
-            $duration, 
-            $preferredStartHour, 
-            $preferredEndHour
-        );
-        
-        $suggestions = array_merge($suggestions, $dailySuggestions);
         $currentDate->modify('+1 day');
     }
     
-    // Score and sort suggestions
-    $scoredSuggestions = [];
-    foreach ($suggestions as $suggestion) {
-        $score = calculateTimeSlotScore($suggestion, $eventName, $preferredStartHour, $preferredEndHour);
-        $suggestion['score'] = $score;
-        $suggestion['confidence'] = min(100, max(0, $score));
-        $scoredSuggestions[] = $suggestion;
-    }
-    
-    // Sort by score (highest first) and return top 5
-    usort($scoredSuggestions, function($a, $b) {
-        return $b['score'] <=> $a['score'];
-    });
-    
-    return array_slice($scoredSuggestions, 0, 5);
+    return $slots;
 }
 
-function findDailyTimeSlots($date, $existingEvents, $duration, $preferredStartHour, $preferredEndHour) {
-    $suggestions = [];
-    $dateStr = $date->format('Y-m-d');
+function filterAvailableSlots($potentialSlots, $existingEvents) {
+    $availableSlots = [];
     
-    // Get events for this specific date
-    $dayEvents = array_filter($existingEvents, function($event) use ($dateStr) {
-        return date('Y-m-d', strtotime($event['start_date'])) === $dateStr;
-    });
-    
-    // Convert duration from minutes to hours for easier calculation
-    $durationHours = $duration / 60;
-    
-    // Generate potential time slots (every 30 minutes)
-    for ($hour = $preferredStartHour; $hour <= $preferredEndHour - $durationHours; $hour += 0.5) {
-        $startTime = sprintf('%02d:%02d', floor($hour), ($hour - floor($hour)) * 60);
-        $endHour = $hour + $durationHours;
-        $endTime = sprintf('%02d:%02d', floor($endHour), ($endHour - floor($endHour)) * 60);
-        
-        // Check if this slot conflicts with existing events
+    foreach ($potentialSlots as $slot) {
+        $slotStart = strtotime($slot['start']);
+        $slotEnd = strtotime($slot['end']);
         $hasConflict = false;
-        foreach ($dayEvents as $event) {
-            // Extract time from datetime if available
-            $eventStartTime = '';
-            $eventEndTime = '';
+        
+        foreach ($existingEvents as $event) {
+            $eventStart = strtotime($event['start']);
+            $eventEnd = strtotime($event['end']);
             
-            if (isset($event['start_time']) && isset($event['end_time'])) {
-                // If separate time fields exist
-                $eventStartTime = $event['start_time'];
-                $eventEndTime = $event['end_time'];
-            } else {
-                // Extract time from datetime field
-                $eventStartTime = date('H:i', strtotime($event['start_date']));
-                $eventEndTime = date('H:i', strtotime($event['end_date']));
-            }
-            
-            // Check for time overlap
-            if ($eventStartTime && $eventEndTime) {
-                $slotStart = strtotime($startTime);
-                $slotEnd = strtotime($endTime);
-                $eventStart = strtotime($eventStartTime);
-                $eventEnd = strtotime($eventEndTime);
-                
-                // Check if time slots overlap
-                if (($slotStart < $eventEnd) && ($slotEnd > $eventStart)) {
-                    $hasConflict = true;
-                    break;
-                }
+            if ($slotStart < $eventEnd && $slotEnd > $eventStart) {
+                $hasConflict = true;
+                break;
             }
         }
         
         if (!$hasConflict) {
-            $suggestions[] = [
-                'date' => $dateStr,
-                'startTime' => $startTime,
-                'endTime' => $endTime,
-                'dayOfWeek' => $date->format('l'),
-                'conflicts' => 0
-            ];
+            $availableSlots[] = $slot;
         }
     }
     
-    return $suggestions;
+    return $availableSlots;
 }
 
-function calculateTimeSlotScore($timeSlot, $eventName, $preferredStartHour, $preferredEndHour) {
-    $score = 50; // Base score
+function rankSlots($slots, $preferredStart, $preferredEnd) {
+    $rankedSlots = [];
+    $now = time();
     
-    // Time preference scoring
-    $startHour = (float)str_replace(':', '.', str_replace(':', '', substr($timeSlot['startTime'], 0, 2) . '.' . substr($timeSlot['startTime'], 3, 2)));
-    
-    // Prefer times closer to preferred range
-    if ($startHour >= $preferredStartHour && $startHour <= $preferredEndHour) {
-        $score += 30;
-    }
-    
-    // Prefer mid-morning and early afternoon
-    if ($startHour >= 9 && $startHour <= 11) {
-        $score += 20; // Morning boost
-    } elseif ($startHour >= 14 && $startHour <= 16) {
-        $score += 15; // Afternoon boost
-    }
-    
-    // Day of week preferences
-    $dayOfWeek = date('N', strtotime($timeSlot['date']));
-    if ($dayOfWeek >= 2 && $dayOfWeek <= 4) { // Tuesday to Thursday
-        $score += 10;
-    }
-    
-    // Event name analysis for time preferences
-    $eventNameLower = strtolower($eventName);
-    if (strpos($eventNameLower, 'meeting') !== false || strpos($eventNameLower, 'call') !== false) {
-        // Meetings prefer mid-morning or early afternoon
-        if ($startHour >= 10 && $startHour <= 11 || $startHour >= 14 && $startHour <= 15) {
-            $score += 15;
+    foreach ($slots as $slot) {
+        $startTime = strtotime($slot['start']);
+        $startHour = (int)date('H', $startTime);
+        $daysDiff = ($startTime - $now) / 86400;
+        
+        $quality = 'excellent';
+        $reason = '';
+        $idealStart = $preferredStart + 1;
+        $idealEnd = $preferredEnd - 2;
+        
+        if ($startHour >= $idealStart && $startHour <= $idealEnd) {
+            $quality = 'excellent';
+            $reason = '⭐ Perfect timing - within your preferred hours';
+        } elseif ($startHour >= $preferredStart && $startHour < $preferredEnd) {
+            $quality = 'good';
+            $reason = '👍 Good timing - within your available hours';
+        } else {
+            $quality = 'fair';
+            $reason = '✓ Available - outside preferred hours but works';
         }
-    } elseif (strpos($eventNameLower, 'lunch') !== false) {
-        // Lunch events prefer lunch time
-        if ($startHour >= 12 && $startHour <= 13) {
-            $score += 25;
+        
+        if ($daysDiff < 1) {
+            $reason .= ' • Today';
+        } elseif ($daysDiff < 2) {
+            $reason .= ' • Tomorrow';
+        } else {
+            $reason .= ' • ' . date('l', $startTime);
         }
-    } elseif (strpos($eventNameLower, 'workout') !== false || strpos($eventNameLower, 'gym') !== false) {
-        // Workout events prefer early morning or evening
-        if ($startHour <= 8 || $startHour >= 17) {
-            $score += 20;
-        }
+        
+        $rankedSlots[] = [
+            'start_datetime' => $slot['start'],
+            'end_datetime' => $slot['end'],
+            'quality' => $quality,
+            'reason' => $reason,
+            'score' => ($quality === 'excellent' ? 100 : ($quality === 'good' ? 75 : 50)) - $daysDiff
+        ];
     }
     
-    return $score;
+    usort($rankedSlots, function($a, $b) { return $b['score'] - $a['score']; });
+    return $rankedSlots;
 }
-
-// AI-powered event categorization and smart suggestions
-function getEventCategory($eventName) {
-    $eventNameLower = strtolower($eventName);
-    
-    $categories = [
-        'meeting' => ['meeting', 'call', 'conference', 'discussion', 'standup', 'sync'],
-        'work' => ['work', 'project', 'task', 'deadline', 'presentation', 'review'],
-        'personal' => ['lunch', 'break', 'personal', 'appointment', 'errands'],
-        'fitness' => ['workout', 'gym', 'exercise', 'run', 'sport', 'fitness'],
-        'social' => ['party', 'dinner', 'hangout', 'social', 'drinks', 'celebration'],
-        'learning' => ['study', 'course', 'training', 'workshop', 'seminar', 'class']
-    ];
-    
-    foreach ($categories as $category => $keywords) {
-        foreach ($keywords as $keyword) {
-            if (strpos($eventNameLower, $keyword) !== false) {
-                return $category;
-            }
-        }
-    }
-    
-    return 'general';
-}
-
-?>

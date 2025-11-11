@@ -1,34 +1,67 @@
 <html>  
 <head>  
-    <title>OnlyPlans - Create Event</title>  
+    <title>Create Event - OnlyPlans</title>  
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
     <link rel="stylesheet" href="styles.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <style>
- .box
- {
-  width:100%;
-  max-width:600px;
-  background-color:#f9f9f9;
-  border:1px solid #ccc;
-  border-radius:12px;
-  padding:30px;
-  margin:0 auto;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+ body {
+  background-color: #f8f9fb;
+ }
+ 
+ .create-event-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+ }
+ 
+ .back-button {
+  background: white;
+  color: #667eea;
+  border: 2px solid white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  margin-bottom: 20px;
+  display: inline-block;
+  transition: all 0.3s ease;
+  font-weight: 500;
+ }
+ 
+ .back-button:hover {
+  background: transparent;
+  color: white;
+  text-decoration: none;
+ }
+ 
+ .form-container {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
  }
  
  .form-title {
-  color: #333;
-  margin-bottom: 30px;
-  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 25px;
   font-weight: 600;
+  font-size: 24px;
  }
  
  .form-group label {
   font-weight: 600;
-  color: #555;
+  color: #333;
   margin-bottom: 8px;
+  display: block;
+ }
+ 
+ .info-text {
+  color: #666;
+  font-size: 13px;
+  margin-top: 5px;
  }
  
  .form-control {
@@ -37,95 +70,69 @@
   padding: 12px 15px;
   transition: border-color 0.3s ease;
   font-size: 14px;
-  line-height: 1.4;
-  vertical-align: top;
-  height: auto;
-  min-height: 44px;
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  cursor: pointer;
- }
-
- /* Specific styling for time inputs */
- input[type="time"] {
-  -webkit-appearance: none;
-  -moz-appearance: textfield;
-  appearance: none;
-  background: white;
-  cursor: pointer;
-  position: relative;
- }
-
- input[type="time"]::-webkit-calendar-picker-indicator {
-  background: transparent;
-  bottom: 0;
-  color: transparent;
-  cursor: pointer;
-  height: auto;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: auto;
- }
-
- input[type="time"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
- }
-
- input[type="time"]::-webkit-clear-button {
-  -webkit-appearance: none;
- }
-
- /* Firefox time input styling */
- input[type="time"]::-moz-focus-inner {
-  border: 0;
-  padding: 0;
  }
  
  .form-control:focus {
-  border-color: #00a8ff;
-  box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  outline: none;
  }
  
- .btn-success {
-  background: linear-gradient(45deg, #00a8ff, #f06292);
+ input[type="date"] {
+  padding: 8px 12px;
+  height: 42px;
+  line-height: 1.5;
+ }
+ 
+ .btn-submit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   padding: 12px 30px;
   border-radius: 25px;
   font-weight: 600;
   transition: all 0.3s ease;
   width: 100%;
+  color: white;
+  font-size: 16px;
+  margin-top: 20px;
  }
  
- .btn-success:hover {
+ .btn-submit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 168, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  color: white;
  }
  
- .btn-back {
-  background: #6c757d;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
+ .color-preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
   display: inline-block;
-  margin-bottom: 20px;
+  margin-left: 10px;
+  border: 2px solid #ddd;
+  vertical-align: middle;
  }
  
- .btn-back:hover {
-  background: #5a6268;
-  color: white;
-  text-decoration: none;
-  transform: translateY(-1px);
+ select.form-control {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding: 8px 12px;
+  padding-right: 35px;
+  height: 42px;
+  line-height: 1.5;
  }
  
- .error
-{
+ #event_color {
+  padding: 8px 12px;
+  height: 42px;
+  line-height: 1.5;
+ }
+ 
+ .error {
   color: #dc3545;
   font-weight: 600;
   text-align: center;
@@ -134,9 +141,9 @@
   background-color: #f8d7da;
   border: 1px solid #f5c6cb;
   border-radius: 8px;
-} 
-
-.success {
+ }
+ 
+ .success {
   color: #155724;
   font-weight: 600;
   text-align: center;
@@ -145,49 +152,7 @@
   background-color: #d4edda;
   border: 1px solid #c3e6cb;
   border-radius: 8px;
-}
-
-.time-helper {
-  font-size: 12px;
-  color: #6c757d;
-  margin-top: 5px;
-} 
-
-/* Color selector styling */
-#event_color {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background: white;
-  border-radius: 8px;
-  border: 2px solid #ddd;
-  padding: 12px 15px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-#event_color:focus {
-  border-color: #00a8ff;
-  box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.1);
-}
-
-#event_color option {
-  padding: 10px;
-  font-weight: 600;
-}
-
-/* Preview color box */
-.color-preview {
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-  display: inline-block;
-  margin-left: 10px;
-  border: 2px solid #ddd;
-  vertical-align: middle;
-  transition: all 0.3s ease;
-}
+ }
 </style>
 <?php 
 include('connection.php');
@@ -229,82 +194,101 @@ if(isset($_REQUEST['save-event']))
   }
 }
 ?>
-<body>  
-    <div class="container">  
-      <div class="table-responsive">  
-        <a href="index.php" class="btn-back">← Back to Calendar</a>
-        <h3 class="form-title">Create New Event</h3>
+<body>
+  <div class="create-event-container">
+    <a href="index.php" class="back-button">← Back to Calendar</a>
+    
+    <h2 style="color: white; text-align: center; margin-bottom: 30px;">
+        Create New Event
+    </h2>
+    
+    <?php if ($fromSuggestions): ?>
+    <div style="background: white; color: #2c3e50; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
+        <strong>Smart Suggestion Applied!</strong><br>
+        <span style="font-size: 14px;">This time slot was automatically selected based on your calendar analysis.</span>
+    </div>
+    <?php endif; ?>
+    
+    <div class="form-container">
+        <h3 class="form-title">Event Details</h3>
         
-        <?php if ($fromSuggestions): ?>
-        <div class="alert alert-info" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white; border: none; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
-            <strong>Smart Suggestion Applied!</strong><br>
-            This time slot was automatically selected based on your calendar analysis.
-        </div>
-        <?php endif; ?>
-        
-        <div class="box">
-         <form method="post" id="event-form">  
-           <div class="form-group">
-           <label for="title">Event Title</label>
-           <input type="text" name="title" id="title" placeholder="Enter event title" required 
-           class="form-control" value="<?php echo htmlspecialchars($prefilled_title); ?>"/>
-          </div>
-          <div class="form-group">
-           <label for="start_date">Start Date</label>
-           <input type="date" name="start_date" id="start_date" required class="form-control" 
-                  value="<?php echo htmlspecialchars($prefilled_start_date); ?>"/>
-           <div class="time-helper">Select the date when your event begins</div>
-          </div>
-          
-          <div class="form-group">
-           <label for="start_time">Start Time</label>
-           <input type="text" name="start_time" id="start_time" required class="form-control" 
-                  placeholder="HH:MM (e.g., 14:30)" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" 
-                  title="Please enter time in HH:MM format (00:00 to 23:59)" maxlength="5"
-                  value="<?php echo htmlspecialchars($prefilled_start_time); ?>"/>
-           <div class="time-helper">Type time in 24-hour format (e.g., 14:30 for 2:30 PM)</div>
-          </div>
-          
-          <div class="form-group">
-           <label for="end_date">End Date</label>
-           <input type="date" name="end_date" id="end_date" required class="form-control"
-                  value="<?php echo htmlspecialchars($prefilled_end_date); ?>"/>
-           <div class="time-helper">Select the date when your event ends</div>
-          </div>
-          
-          <div class="form-group">
-           <label for="end_time">End Time</label>
-           <input type="text" name="end_time" id="end_time" required class="form-control" 
-                  placeholder="HH:MM (e.g., 16:30)" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" 
-                  title="Please enter time in HH:MM format (00:00 to 23:59)" maxlength="5"
-                  value="<?php echo htmlspecialchars($prefilled_end_time); ?>"/>
-           <div class="time-helper">Type time in 24-hour format (e.g., 16:30 for 4:30 PM)</div>
-          </div>
-          
-           <div class="form-group">
-           <label for="event_color">Event Color <span class="color-preview" id="colorPreview"></span></label>
-           <select name="event_color" id="event_color" class="form-control" style="height: 50px;">
-               <option value="#3788d8" style="background-color: #3788d8; color: white;">🔵 Blue (Default)</option>
-               <option value="#28a745" style="background-color: #28a745; color: white;">🟢 Green (Work)</option>
-               <option value="#dc3545" style="background-color: #dc3545; color: white;">🔴 Red (Important)</option>
-               <option value="#ffc107" style="background-color: #ffc107; color: black;">🟡 Yellow (Personal)</option>
-               <option value="#6f42c1" style="background-color: #6f42c1; color: white;">🟣 Purple (Health)</option>
-               <option value="#fd7e14" style="background-color: #fd7e14; color: white;">🟠 Orange (Social)</option>
-               <option value="#20c997" style="background-color: #20c997; color: white;">🔵 Teal (Study)</option>
-               <option value="#e83e8c" style="background-color: #e83e8c; color: white;">🩷 Pink (Family)</option>
-               <option value="#6c757d" style="background-color: #6c757d; color: white;">⚫ Gray (Meetings)</option>
-           </select>
-           <div class="time-helper">Choose a color to categorize your event</div>
-          </div>
-          <div class="form-group">
-           <input type="submit" id="save-event" name="save-event" value="Save Event" class="btn btn-success" />
-           </div>
-           <div id="message-container"></div>
-         </form>
-         </div>
-       </div>  
-      </div>
-      
+        <form method="post" id="event-form">  
+            <!-- Event Title -->
+            <div class="form-group">
+                <label for="title">Event Title</label>
+                <input type="text" name="title" id="title" placeholder="e.g., Team Meeting" required 
+                       class="form-control" value="<?php echo htmlspecialchars($prefilled_title); ?>"/>
+                <p class="info-text">What is this event about?</p>
+            </div>
+            
+            <!-- Start Date and Time Row -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" name="start_date" id="start_date" required class="form-control" 
+                               value="<?php echo htmlspecialchars($prefilled_start_date); ?>"/>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="start_time">Start Time</label>
+                        <input type="text" name="start_time" id="start_time" required class="form-control" 
+                               placeholder="HH:MM (e.g., 14:30)" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" 
+                               maxlength="5" value="<?php echo htmlspecialchars($prefilled_start_time); ?>"/>
+                    </div>
+                </div>
+            </div>
+            <p class="info-text">When does your event start?</p>
+            
+            <!-- End Date and Time Row -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="end_date">End Date</label>
+                        <input type="date" name="end_date" id="end_date" required class="form-control"
+                               value="<?php echo htmlspecialchars($prefilled_end_date); ?>"/>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="end_time">End Time</label>
+                        <input type="text" name="end_time" id="end_time" required class="form-control" 
+                               placeholder="HH:MM (e.g., 16:30)" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" 
+                               maxlength="5" value="<?php echo htmlspecialchars($prefilled_end_time); ?>"/>
+                    </div>
+                </div>
+            </div>
+            <p class="info-text">When does your event end?</p>
+            
+            <!-- Event Color -->
+            <div class="form-group">
+                <label for="event_color">Event Color <span class="color-preview" id="colorPreview"></span></label>
+                <select name="event_color" id="event_color" class="form-control">
+                    <option value="#3788d8" style="background-color: #3788d8; color: white;">🔵 Blue (Default)</option>
+                    <option value="#28a745" style="background-color: #28a745; color: white;">🟢 Green (Work)</option>
+                    <option value="#dc3545" style="background-color: #dc3545; color: white;">🔴 Red (Important)</option>
+                    <option value="#ffc107" style="background-color: #ffc107; color: black;">🟡 Yellow (Personal)</option>
+                    <option value="#6f42c1" style="background-color: #6f42c1; color: white;">🟣 Purple (Health)</option>
+                    <option value="#fd7e14" style="background-color: #fd7e14; color: white;">🟠 Orange (Social)</option>
+                    <option value="#20c997" style="background-color: #20c997; color: white;">🔵 Teal (Study)</option>
+                    <option value="#e83e8c" style="background-color: #e83e8c; color: white;">🩷 Pink (Family)</option>
+                    <option value="#6c757d" style="background-color: #6c757d; color: white;">⚫ Black</option>
+                </select>
+                <p class="info-text">Choose a color to organize your events</p>
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" name="submit" class="btn-submit">
+                Create Event
+            </button>
+            
+            <!-- Messages -->
+            <div id="message"></div>
+        </form>
+    </div>
+  </div>
+  
     <script>
     $(document).ready(function() {
         // Initialize color preview
@@ -471,4 +455,4 @@ if(isset($_REQUEST['save-event']))
     });
     </script>
  </body>  
-</html>  
+</html>

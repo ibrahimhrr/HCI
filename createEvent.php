@@ -3,8 +3,12 @@ include('connection.php');
 
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = $_POST['title'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    exit;
+}
+
+$title = $_POST['title'] ?? '';
     $start_date = $_POST['start_date'] ?? '';
     $start_time = $_POST['start_time'] ?? '';
     $end_date = $_POST['end_date'] ?? '';
@@ -24,12 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    // Validate that end time is after start time
+    // Validate that end datetime is after start datetime (allows same day events)
     $start_datetime = $start_date . ' ' . $start_time . ':00';
     $end_datetime = $end_date . ' ' . $end_time . ':00';
     
     if (strtotime($end_datetime) <= strtotime($start_datetime)) {
-        echo json_encode(['success' => false, 'message' => 'End time must be after start time']);
+        echo json_encode(['success' => false, 'message' => 'End date/time must be after start date/time']);
         exit;
     }
     
@@ -64,9 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo json_encode(['success' => false, 'message' => 'Error preparing statement: ' . mysqli_error($connection)]);
     }
-} else {
-    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
-}
 
 mysqli_close($connection);
 ?>

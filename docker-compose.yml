@@ -1,0 +1,67 @@
+# OnlyPlans - Docker Configuration
+# This packages your entire app (PHP + MySQL) into a portable container
+
+version: '3.8'
+
+services:
+  # PHP Web Server
+  web:
+    image: php:8.1-apache
+    container_name: onlyplans-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html/
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=onlyplans_user
+      - DB_PASSWORD=onlyplans_pass
+      - DB_NAME=onlyplans
+    command: >
+      bash -c "docker-php-ext-install mysqli pdo pdo_mysql
+      && apache2-foreground"
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: onlyplans-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: onlyplans
+      MYSQL_USER: onlyplans_user
+      MYSQL_PASSWORD: onlyplans_pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database_setup.sql:/docker-entrypoint-initdb.d/setup.sql
+    ports:
+      - "3306:3306"
+
+  # phpMyAdmin (Optional - for database management)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: onlyplans-phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: onlyplans_user
+      PMA_PASSWORD: onlyplans_pass
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
+
+# HOW TO USE:
+# 1. Install Docker Desktop (docker.com)
+# 2. Open terminal in this folder
+# 3. Run: docker-compose up
+# 4. Open browser: http://localhost:8080
+# 5. That's it! Everything is automatically set up.
+#
+# To share with others:
+# - Give them this folder
+# - They just need Docker and run "docker-compose up"
+# - All database data persists in Docker volumes
