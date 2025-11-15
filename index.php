@@ -10,9 +10,20 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
  <body>
-  <h2 class="calendar-title">
-    <span class="calendar-title__only">Only</span><span class="calendar-title__plans">Plans</span>
-  </h2>
+  <div class="page-toolbar">
+      <h2 class="calendar-title" aria-label="OnlyPlans">
+        <span class="calendar-title__only">Only</span><span class="calendar-title__plans">Plans</span>
+      </h2>
+
+      <div class="accessibility-controls" role="region" aria-label="Display preferences">
+        <button type="button" id="darkModeToggle" class="accessibility-controls__btn" aria-pressed="false">
+          🌙 Dark Mode
+        </button>
+        <button type="button" id="contrastModeToggle" class="accessibility-controls__btn" aria-pressed="false">
+          🎯 High Contrast
+        </button>
+      </div>
+  </div>
   
   <div class="container">
    <div id="calendar"></div>
@@ -29,6 +40,62 @@
 
 <script>
    $(document).ready(function() {
+   const bodyElement = $('body');
+   const darkModeToggle = $('#darkModeToggle');
+   const contrastModeToggle = $('#contrastModeToggle');
+   const DARK_MODE_KEY = 'onlyplans-dark-mode';
+   const HIGH_CONTRAST_KEY = 'onlyplans-high-contrast';
+
+   function getPreference(key) {
+       try {
+           return localStorage.getItem(key);
+       } catch (error) {
+           console.warn('Display preference unavailable:', error);
+           return null;
+       }
+   }
+
+   function setPreference(key, value) {
+       try {
+           localStorage.setItem(key, value);
+       } catch (error) {
+           console.warn('Unable to persist preference:', error);
+       }
+   }
+
+   function applyDisplayPreferences() {
+       const useDarkMode = getPreference(DARK_MODE_KEY) === 'true';
+       const useHighContrast = getPreference(HIGH_CONTRAST_KEY) === 'true';
+
+       bodyElement.toggleClass('dark-mode', useDarkMode);
+       bodyElement.toggleClass('high-contrast', useHighContrast);
+
+       if (darkModeToggle.length) {
+           darkModeToggle
+               .attr('aria-pressed', useDarkMode)
+               .text(useDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode');
+       }
+
+       if (contrastModeToggle.length) {
+           contrastModeToggle
+               .attr('aria-pressed', useHighContrast)
+               .text(useHighContrast ? '🎯 Standard Contrast' : '🎯 High Contrast');
+       }
+   }
+
+   darkModeToggle.on('click', function() {
+       const nextValue = !bodyElement.hasClass('dark-mode');
+       setPreference(DARK_MODE_KEY, nextValue);
+       applyDisplayPreferences();
+   });
+
+   contrastModeToggle.on('click', function() {
+       const nextValue = !bodyElement.hasClass('high-contrast');
+       setPreference(HIGH_CONTRAST_KEY, nextValue);
+       applyDisplayPreferences();
+   });
+
+   applyDisplayPreferences();
    // Global function to add new event to calendar in real-time
    window.addEventToCalendar = function(eventData) {
        $('#calendar').fullCalendar('renderEvent', eventData, true);

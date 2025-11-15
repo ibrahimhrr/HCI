@@ -2,10 +2,22 @@ body {
   background-color: #f8f9fb;
 }
 
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 20px auto 0;
+  padding: 0 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
 .calendar-title {
-  text-align: center;
   font-weight: 700;
-  margin: 20px 0;
+  margin: 0;
+  flex: 1 1 auto;
+  text-align: center;
 }
 
 .calendar-title__only {
@@ -14,6 +26,37 @@ body {
 
 .calendar-title__plans {
   color: #f06292;
+}
+
+.accessibility-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0;
+  margin-left: auto;
+}
+
+.accessibility-controls__btn {
+  border: none;
+  border-radius: 999px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px 18px;
+  font-weight: 600;
+  color: #374151;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+}
+
+.accessibility-controls__btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.accessibility-controls__btn[aria-pressed="true"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
 }
 
 /* ===== SIMPLIFIED FULLCALENDAR BUTTON STYLING ===== */
@@ -163,17 +206,39 @@ body {
 .fc-day {
   border: 1px solid #dee2e6 !important;
   background: #fdfdfd;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .fc-day:hover {
-  background: #f8f9fa !important;
+  background: linear-gradient(135deg, #f4f8ff 0%, #e8efff 100%) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  border-color: #c3d4ff !important;
 }
 
-.fc-today {
+.fc-day::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+}
+
+
+
+.fc-day.fc-today {
   background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
   border: 1px solid #2196f3 !important;
+  box-shadow: inset 0 0 0 2px rgba(33, 150, 243, 0.35);
 }
+
+/* .fc-day.fc-today::after {
+  border-color: rgba(33, 150, 243, 0.8);
+} */
 
 .fc-past {
   background: #fafafa !important;
@@ -196,7 +261,6 @@ body {
   color: white !important;
   font-weight: 700 !important;
   font-size: 24px !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Simple button enhancements */
@@ -258,6 +322,20 @@ body {
 
 .fc-time-grid .fc-content-skeleton {
   padding: 0 2px;
+}
+
+.fc-time-grid .fc-bg td,
+.fc-time-grid .fc-content-col {
+  border-left: 1px solid #050607 !important;
+}
+
+.fc-time-grid .fc-bg td:last-child,
+.fc-time-grid .fc-content-col:last-child {
+  border-right: 1px solid #050607 !important;
+}
+
+.fc-time-grid .fc-axis {
+  border-right: 1px solid #000000 !important;
 }
 
 /* Custom scrollbar for better appearance */
@@ -339,7 +417,6 @@ body {
 }
 
 .fc-today::before {
-  content: '📍';
   position: absolute;
   top: 5px;
   right: 5px;
@@ -351,6 +428,15 @@ body {
 .fc-sat, .fc-sun {
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
   color: #6c757d !important;
+}
+
+.fc-sat.fc-today,
+.fc-sun.fc-today,
+.fc-day.fc-today.fc-sat,
+.fc-day.fc-today.fc-sun {
+  background: linear-gradient(135deg, #ffe29f 0%, #ffa99f 100%) !important;
+  border-color: #ff9800 !important;
+  color: #5f370e !important;
 }
 
 /* Loading animation */
@@ -444,4 +530,433 @@ body {
     height: 16px;
     font-size: 9px;
   }
+}
+
+/* ===== DARK MODE ===== */
+body.dark-mode {
+  background-color: #1f253d;
+  color: #e2e8f0;
+}
+
+body.dark-mode .calendar-title,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode p,
+body.dark-mode label,
+body.dark-mode table,
+body.dark-mode th,
+body.dark-mode td {
+  color: #f8fafc;
+}
+
+body.dark-mode .calendar-title__only,
+body.dark-mode .calendar-title__plans {
+  color: #e0e7ff;
+}
+
+body.dark-mode .calendar-title__plans {
+  color: #f9a8d4;
+}
+
+body.dark-mode .accessibility-controls__btn {
+  background: #1f2937;
+  color: #e2e8f0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .accessibility-controls__btn[aria-pressed="true"] {
+  background: linear-gradient(135deg, #fb7185 0%, #f472b6 100%);
+  color: #0f172a;
+}
+
+body.dark-mode #calendar,
+body.dark-mode .fc,
+body.dark-mode .fc-view-container {
+  background: #0b1324;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+  color: #e2e8f0;
+}
+
+body.dark-mode .fc-toolbar {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+body.dark-mode .fc-toolbar h2 {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .fc-widget-header {
+  background: #1f2937 !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+body.dark-mode .fc-widget-content,
+body.dark-mode .fc-day,
+body.dark-mode .fc-day-grid .fc-row {
+  background: #0b1324 !important;
+  border-color: #1f2937 !important;
+}
+
+body.dark-mode .fc-day:hover {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+  border-color: #334155 !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+  transform: translateY(-2px);
+}
+
+body.dark-mode .fc-day-number {
+  color: #000000 !important;
+}
+
+body.dark-mode .fc-day::after {
+  border-color: transparent;
+  inset: 6px;
+}
+
+body.dark-mode .fc-day:hover::after {
+  border-color: rgba(59, 130, 246, 0.75);
+}
+
+body.dark-mode .fc table,
+body.dark-mode .fc td,
+body.dark-mode .fc th,
+body.dark-mode .fc-axis,
+body.dark-mode .fc-list-heading td,
+body.dark-mode .fc-list-table td {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .fc-today {
+  background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%) !important;
+  border: 2px solid #60a5fa !important;
+  color: #e2e8f0 !important;
+}
+
+body.dark-mode .fc-event {
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.8) !important;
+  color: #f8fafc !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .fc-event .fc-title {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .fc-list-view .fc-list-item {
+  background: #111827 !important;
+  border-left-color: #38bdf8 !important;
+}
+
+body.dark-mode .fc-list-view,
+body.dark-mode .fc-list-table {
+  background: #0b1324 !important;
+  color: #f8fafc !important;
+  border-color: #1f2937 !important;
+}
+
+body.dark-mode .fc-list-heading td {
+  background: #1f2937 !important;
+}
+
+body.dark-mode .fc-list-view .fc-list-item td,
+body.dark-mode .fc-unthemed .fc-list-heading td,
+body.dark-mode .fc-unthemed .fc-list-item td {
+  background: #0f172a !important;
+  border-color: #1f2937 !important;
+}
+
+body.dark-mode .fc-list-view .fc-scroller {
+  background: #0b1324 !important;
+}
+
+body.dark-mode .fc-list-view .fc-list-empty,
+body.dark-mode .fc-unthemed .fc-list-empty,
+body.dark-mode .fc-list-empty td {
+  background: #0b1324 !important;
+  color: #e2e8f0 !important;
+  border-color: #1f2937 !important;
+}
+
+body.dark-mode .modal-content {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+body.dark-mode .notification {
+  background: #1f2937 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-mode .fc-button.btn {
+  background: #1f2937;
+  color: #f8fafc;
+  border: 1px solid #374151;
+}
+
+body.dark-mode .fc-button.btn:hover {
+  background: #334155;
+}
+
+body.dark-mode .form-control,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #111827;
+  border: 1px solid #374151;
+  color: #f8fafc;
+}
+
+/* Dark mode adjustments for secondary pages */
+body.dark-mode .create-event-container,
+body.dark-mode .smart-suggestions-container {
+  background: linear-gradient(135deg, #0f172a 0%, #1f2937 100%) !important;
+  border: 1px solid #1f2937 !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7) !important;
+}
+
+body.dark-mode .form-container,
+body.dark-mode .suggestions-form,
+body.dark-mode #suggestionsResults > div {
+  background: #0b1324 !important;
+  color: #f8fafc !important;
+  border: 1px solid #1f2937 !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.dark-mode .form-title,
+body.dark-mode .suggestions-form h3,
+body.dark-mode .smart-suggestions-container h2,
+body.dark-mode .suggestion-card h4 {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .form-group label,
+body.dark-mode .info-text,
+body.dark-mode .slot-details {
+  color: #cbd5f5 !important;
+}
+
+body.dark-mode .suggestion-card {
+  background: linear-gradient(135deg, #1f2937 0%, #0f172a 100%) !important;
+  color: #f8fafc !important;
+  border: 1px solid #1f2937 !important;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.dark-mode .suggestion-card .time-display {
+  color: #e0e7ff !important;
+}
+
+body.dark-mode .quality-badge {
+  color: #0f172a;
+}
+
+body.dark-mode .back-button {
+  background: transparent !important;
+  color: #f8fafc !important;
+  border-color: #475569 !important;
+}
+
+body.dark-mode .back-button:hover {
+  background: #1f2937 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-mode .btn-submit,
+body.dark-mode .suggestion-card .btn,
+body.dark-mode #suggestionsResults .btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+  border: none !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .suggestion-card .btn.btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #012c1a !important;
+}
+
+body.dark-mode .loading-spinner p {
+  color: #f8fafc !important;
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+body.high-contrast {
+  background-color: #000;
+  color: #fff;
+}
+
+body.high-contrast .calendar-title__only,
+body.high-contrast .calendar-title__plans {
+  color: #fff;
+}
+
+body.high-contrast .accessibility-controls {
+  border: 2px solid #fff;
+  border-radius: 50px;
+}
+
+body.high-contrast .accessibility-controls__btn {
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  box-shadow: none;
+}
+
+body.high-contrast .accessibility-controls__btn[aria-pressed="true"] {
+  background: #fff;
+  color: #000;
+}
+
+body.high-contrast #calendar,
+body.high-contrast .fc,
+body.high-contrast .fc-view-container {
+  background: #000 !important;
+  border: 3px solid #fff !important;
+  box-shadow: none !important;
+  color: #fff !important;
+}
+
+body.high-contrast .fc-toolbar {
+  background: #000 !important;
+  border-bottom: 3px solid #fff;
+}
+
+body.high-contrast .fc-widget-header,
+body.high-contrast .fc-widget-content,
+body.high-contrast .fc-day,
+body.high-contrast .fc-day-grid .fc-row {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  color: #fff !important;
+}
+
+body.high-contrast .fc-day:hover {
+  background: #222 !important;
+}
+
+body.high-contrast .fc-day-number {
+  color: #010000 !important;
+}
+
+body.high-contrast .fc-today {
+  background: #00c3ff !important;
+  border-color: #000 !important;
+  color: #000 !important;
+}
+
+body.high-contrast .fc-event {
+  background: #ff00ee !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+body.high-contrast .fc-event:hover::after {
+  background: #ffff00;
+  color: #000;
+}
+
+body.high-contrast .fc-button {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+body.high-contrast .fc-button:hover {
+  background: #ffff00 !important;
+}
+
+body.high-contrast .fc-list-view .fc-list-item {
+  background: #000 !important;
+  border-left: 4px solid #fff !important;
+}
+
+body.high-contrast .notification {
+  background: #000 !important;
+  border: 2px solid #000000 !important;
+  color: #fff !important;
+}
+
+body.high-contrast .modal-content {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+body.high-contrast .modal-header {
+  background: #000 !important;
+  color: #fff !important;
+  border-bottom: 2px solid #fff !important;
+}
+
+body.high-contrast .form-control,
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+/* High contrast adjustments for secondary pages */
+body.high-contrast .create-event-container,
+body.high-contrast .smart-suggestions-container {
+  background: #000 !important;
+  border: 3px solid #fff !important;
+  box-shadow: none !important;
+}
+
+body.high-contrast .form-container,
+body.high-contrast .suggestions-form,
+body.high-contrast #suggestionsResults > div,
+body.high-contrast .suggestion-card {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+  box-shadow: none !important;
+}
+
+body.high-contrast .form-title,
+body.high-contrast .smart-suggestions-container h2,
+body.high-contrast .suggestions-form h3,
+body.high-contrast .suggestion-card h4,
+body.high-contrast .time-display,
+body.high-contrast .slot-details,
+body.high-contrast .info-text,
+body.high-contrast .form-group label {
+  color: #fff !important;
+}
+
+body.high-contrast .quality-badge {
+  background: #fff !important;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+}
+
+body.high-contrast .back-button,
+body.high-contrast .btn-submit,
+body.high-contrast .suggestion-card .btn,
+body.high-contrast #suggestionsResults .btn {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+body.high-contrast .back-button:hover {
+  background: #ffff00 !important;
+  color: #000 !important;
+}
+
+body.high-contrast .suggestion-card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+body.high-contrast .loading-spinner p {
+  color: #fff !important;
 }

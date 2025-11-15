@@ -96,6 +96,25 @@
             margin-top: 5px;
         }
     </style>
+    <script>
+        (function() {
+            const DARK_MODE_KEY = 'onlyplans-dark-mode';
+            const HIGH_CONTRAST_KEY = 'onlyplans-high-contrast';
+
+            function applyDisplayPreferences() {
+                try {
+                    const useDarkMode = localStorage.getItem(DARK_MODE_KEY) === 'true';
+                    const useHighContrast = localStorage.getItem(HIGH_CONTRAST_KEY) === 'true';
+                    document.body.classList.toggle('dark-mode', useDarkMode);
+                    document.body.classList.toggle('high-contrast', useHighContrast);
+                } catch (error) {
+                    console.warn('Display preference unavailable:', error);
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', applyDisplayPreferences);
+        })();
+    </script>
 </head>
 <body>
     <div class="smart-suggestions-container">

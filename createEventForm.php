@@ -132,6 +132,21 @@
   line-height: 1.5;
  }
  
+ .time-select-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+ }
+ 
+ .time-select-group select {
+  flex: 1;
+ }
+ 
+ .time-select-separator {
+  font-weight: 700;
+  color: #4a5568;
+ }
+ 
  .error {
   color: #dc3545;
   font-weight: 600;
@@ -154,6 +169,25 @@
   border-radius: 8px;
  }
 </style>
+<script>
+(function() {
+    const DARK_MODE_KEY = 'onlyplans-dark-mode';
+    const HIGH_CONTRAST_KEY = 'onlyplans-high-contrast';
+
+    function applyDisplayPreferences() {
+        try {
+            const useDarkMode = localStorage.getItem(DARK_MODE_KEY) === 'true';
+            const useHighContrast = localStorage.getItem(HIGH_CONTRAST_KEY) === 'true';
+            document.body.classList.toggle('dark-mode', useDarkMode);
+            document.body.classList.toggle('high-contrast', useHighContrast);
+        } catch (error) {
+            console.warn('Display preference unavailable:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', applyDisplayPreferences);
+})();
+</script>
 <?php 
 include('connection.php');
 
@@ -164,6 +198,16 @@ $prefilled_start_date = $_GET['start_date'] ?? '';
 $prefilled_start_time = $_GET['start_time'] ?? '';
 $prefilled_end_date = $_GET['end_date'] ?? '';
 $prefilled_end_time = $_GET['end_time'] ?? '';
+
+function split_time_parts($time_value) {
+  if (preg_match('/^(\d{2}):(\d{2})$/', $time_value, $matches)) {
+    return [$matches[1], $matches[2]];
+  }
+  return ['', ''];
+}
+
+list($prefilled_start_hour, $prefilled_start_minute) = split_time_parts($prefilled_start_time);
+list($prefilled_end_hour, $prefilled_end_minute) = split_time_parts($prefilled_end_time);
 
 if(isset($_REQUEST['save-event']))
 {
@@ -232,10 +276,29 @@ if(isset($_REQUEST['save-event']))
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="start_time">Start Time</label>
-                        <input type="text" name="start_time" id="start_time" required class="form-control" 
-                               placeholder="HH:MM (e.g., 14:30)" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" 
-                               maxlength="5" value="<?php echo htmlspecialchars($prefilled_start_time); ?>"/>
+                        <label for="start_time_hour">Start Time</label>
+                        <div class="time-select-group">
+                            <select id="start_time_hour" class="form-control" required>
+                                <option value="">HH</option>
+                                <?php for ($hour = 0; $hour < 24; $hour++): 
+                                    $value = sprintf('%02d', $hour);
+                                    $selected = ($value === $prefilled_start_hour) ? 'selected' : '';
+                                ?>
+                                    <option value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+                                <?php endfor; ?>
+                            </select>
+                            <span class="time-select-separator">:</span>
+                            <select id="start_time_minute" class="form-control" required>
+                                <option value="">MM</option>
+                                <?php for ($minute = 0; $minute < 60; $minute += 5): 
+                                    $value = sprintf('%02d', $minute);
+                                    $selected = ($value === $prefilled_start_minute) ? 'selected' : '';
+                                ?>
+                                    <option value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+                        <input type="hidden" name="start_time" id="start_time" value="<?php echo htmlspecialchars($prefilled_start_time); ?>"/>
                     </div>
                 </div>
             </div>
@@ -252,10 +315,29 @@ if(isset($_REQUEST['save-event']))
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="end_time">End Time</label>
-                        <input type="text" name="end_time" id="end_time" required class="form-control" 
-                               placeholder="HH:MM (e.g., 16:30)" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" 
-                               maxlength="5" value="<?php echo htmlspecialchars($prefilled_end_time); ?>"/>
+                        <label for="end_time_hour">End Time</label>
+                        <div class="time-select-group">
+                            <select id="end_time_hour" class="form-control" required>
+                                <option value="">HH</option>
+                                <?php for ($hour = 0; $hour < 24; $hour++): 
+                                    $value = sprintf('%02d', $hour);
+                                    $selected = ($value === $prefilled_end_hour) ? 'selected' : '';
+                                ?>
+                                    <option value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+                                <?php endfor; ?>
+                            </select>
+                            <span class="time-select-separator">:</span>
+                            <select id="end_time_minute" class="form-control" required>
+                                <option value="">MM</option>
+                                <?php for ($minute = 0; $minute < 60; $minute += 5): 
+                                    $value = sprintf('%02d', $minute);
+                                    $selected = ($value === $prefilled_end_minute) ? 'selected' : '';
+                                ?>
+                                    <option value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+                        <input type="hidden" name="end_time" id="end_time" value="<?php echo htmlspecialchars($prefilled_end_time); ?>"/>
                     </div>
                 </div>
             </div>
@@ -347,111 +429,73 @@ if(isset($_REQUEST['save-event']))
                 }
             });
         });
-        
-        // Time input formatting and validation
-        function formatTimeInput(input) {
-            let value = input.val().replace(/[^\d]/g, ''); // Remove non-digits
-            
-            if (value.length >= 2) {
-                let hours = value.substring(0, 2);
-                let minutes = value.substring(2, 4);
-                
-                // Validate hours (00-23)
-                if (parseInt(hours) > 23) {
-                    hours = '23';
-                }
-                
-                // Validate minutes (00-59)
-                if (minutes && parseInt(minutes) > 59) {
-                    minutes = '59';
-                }
-                
-                // Format with colon
-                if (minutes) {
-                    value = hours + ':' + minutes;
-                } else if (value.length > 2) {
-                    value = hours + ':';
-                } else {
-                    value = hours;
-                }
-                
-                input.val(value);
+
+        function updateTimeHidden(prefix) {
+            const hour = $(`#${prefix}_hour`).val();
+            const minute = $(`#${prefix}_minute`).val();
+            if (hour !== '' && minute !== '') {
+                $(`#${prefix}`).val(`${hour}:${minute}`);
+            } else {
+                $(`#${prefix}`).val('');
             }
         }
 
-        // Real-time formatting for time inputs
-        $('#start_time, #end_time').on('input', function() {
-            formatTimeInput($(this));
-        });
-
-        // Validate time format on blur
-        $('#start_time, #end_time').on('blur', function() {
-            const timeValue = $(this).val();
-            const timePattern = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
-            
-            if (timeValue && !timePattern.test(timeValue)) {
-                alert('Please enter a valid time in HH:MM format (00:00 to 23:59)');
-                $(this).focus();
-            }
-        });
-
-        // Auto-add colon when typing
-        $('#start_time, #end_time').on('keyup', function(e) {
-            let value = $(this).val();
-            
-            // Add colon automatically after 2 digits
-            if (value.length === 2 && e.key !== ':' && e.key !== 'Backspace') {
-                $(this).val(value + ':');
-            }
-        });
-
-        // Auto-set end date and time when start is selected
-        $('#start_date, #start_time').on('change', function() {
+        function autoFillEndDefaults() {
             const startDate = $('#start_date').val();
-            const startTime = $('#start_time').val();
-            
-            if (startDate && startTime && !$('#end_date').val() && /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(startTime)) {
-                // Set end date to same as start date
-                $('#end_date').val(startDate);
-                
-                // Add 1 hour to start time
-                const [hours, minutes] = startTime.split(':');
-                const endHour = (parseInt(hours) + 1) % 24;
-                const endTime = String(endHour).padStart(2, '0') + ':' + minutes;
-                $('#end_time').val(endTime);
+            const startHour = $('#start_time_hour').val();
+            const startMinute = $('#start_time_minute').val();
+
+            if (!startDate || startHour === '' || startMinute === '') {
+                return;
             }
+
+            if (!$('#end_date').val()) {
+                $('#end_date').val(startDate);
+            }
+
+            if (!$('#end_time').val()) {
+                const nextHour = (parseInt(startHour, 10) + 1) % 24;
+                $('#end_time_hour').val(String(nextHour).padStart(2, '0'));
+                $('#end_time_minute').val(startMinute);
+                updateTimeHidden('end_time');
+            }
+        }
+
+        ['start_time', 'end_time'].forEach(function(prefix) {
+            updateTimeHidden(prefix);
+            $(`#${prefix}_hour, #${prefix}_minute`).on('change', function() {
+                updateTimeHidden(prefix);
+                if (prefix === 'start_time') {
+                    autoFillEndDefaults();
+                }
+            });
         });
-        
-        // Validate that end time is after start time
-        $('#end_date, #end_time').on('change', function() {
+
+        $('#start_date').on('change', autoFillEndDefaults);
+
+        function validateEndAfterStart() {
             const startDate = $('#start_date').val();
             const startTime = $('#start_time').val();
             const endDate = $('#end_date').val();
             const endTime = $('#end_time').val();
-            
+
             if (startDate && startTime && endDate && endTime) {
                 const startDateTime = new Date(startDate + 'T' + startTime);
                 const endDateTime = new Date(endDate + 'T' + endTime);
-                
+
                 if (endDateTime <= startDateTime) {
                     alert('End time must be after start time!');
-                    $(this).focus();
+                    $('#end_time_hour').focus();
                 }
             }
+        }
+
+        $('#end_date, #end_time_hour, #end_time_minute').on('change', function() {
+            updateTimeHidden('end_time');
+            validateEndAfterStart();
         });
 
-        // Allow only numbers and colon
-        $('#start_time, #end_time').on('keypress', function(e) {
-            const allowedKeys = [8, 9, 27, 13, 46, 58]; // backspace, tab, escape, enter, delete, colon
-            const key = e.which;
-            
-            if (allowedKeys.indexOf(key) !== -1 || 
-                (key >= 48 && key <= 57) || // numbers 0-9
-                key === 58) { // colon
-                return true;
-            }
-            e.preventDefault();
-        });
+        autoFillEndDefaults();
     });
     </script>
  </body>  
