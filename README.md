@@ -329,67 +329,6 @@ OnlyPlans Calendar - Installation
 6. Done!
 ```
 
-### **For Developers:**
-
-1. **GitHub Repository:**
-```bash
-git clone https://github.com/yourusername/onlyplans.git
-cd onlyplans
-# Run install.php or docker-compose up
-```
-
-2. **Docker Hub:**
-```bash
-docker pull yourusername/onlyplans
-docker run -p 8080:80 yourusername/onlyplans
-```
-
----
-
-## 🔒 Security Notes
-
-**Before Production Deployment:**
-
-1. **Delete installer:** `rm install.php`
-2. **Use prepared statements** (already implemented)
-3. **Set environment variables:**
-```php
-// In production
-$hostname = getenv('DB_HOST');
-$username = getenv('DB_USER');
-$password = getenv('DB_PASS');
-```
-4. **Enable HTTPS**
-5. **Add authentication system**
-6. **Sanitize all inputs** (already implemented)
-
----
-
-## 🚀 Deployment Options
-
-### **Shared Hosting:**
-1. Upload files via FTP
-2. Create MySQL database in cPanel
-3. Import `database_setup.sql`
-4. Update `connection.php`
-
-### **Cloud Platforms:**
-
-**Heroku:**
-- Add ClearDB MySQL addon
-- Set environment variables
-- Deploy via Git
-
-**AWS:**
-- EC2 instance + RDS MySQL
-- Or use Elastic Beanstalk
-
-**DigitalOcean:**
-- One-click LAMP droplet
-- Upload via SFTP
-
----
-
 ## 📚 Additional Documentation
 
 - **Smart Suggestions Algorithm**: See `SMART_SUGGESTIONS_GUIDE.md`
@@ -398,17 +337,7 @@ $password = getenv('DB_PASS');
 
 ---
 
-## 🤝 Contributing
 
-Found a bug or want to add features? Contributions welcome!
-
-1. Fork the repository
-2. Create feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit pull request
-
----
 
 ## 📄 License
 
@@ -446,24 +375,6 @@ MIT License - Free to use, modify, and distribute
 
 ---
 
-## ❓ FAQ
-
-**Q: Can I use this offline?**  
-A: Yes! Use SQLite version or run local MAMP/XAMPP server
-
-**Q: How do I backup my data?**  
-A: Export database from phpMyAdmin or copy `onlyplans.db` (SQLite)
-
-**Q: Can multiple users access it?**  
-A: Currently single-user. For multi-user, add authentication system
-
-**Q: Does it sync across devices?**  
-A: Use cloud hosting (Heroku/AWS) for automatic sync
-
-**Q: Can I customize the colors?**  
-A: Yes! Edit color options in `createEventForm.php` and `index.php`
-
----
 
 ## 📞 Support
 
