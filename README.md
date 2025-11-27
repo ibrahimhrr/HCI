@@ -134,31 +134,6 @@ HCI/
 
 ---
 
-## 🔄 Migrating Between Devices
-
-### **Method 1: Database Export/Import**
-```bash
-# On old device - Export data
-mysqldump -u root -p onlyplans > backup.sql
-
-# On new device - Import data
-mysql -u root -p onlyplans < backup.sql
-```
-
-### **Method 2: SQLite (Recommended)**
-- Switch to SQLite (see Option 2 above)
-- Just copy the entire folder
-- `onlyplans.db` file contains everything
-- No database setup on new device!
-
-### **Method 3: Docker**
-- Docker volumes persist data
-- Copy docker-compose.yml
-- Run `docker-compose up` anywhere
-- Data automatically migrates
-
----
-
 ## 🛠️ Configuration
 
 ### **Database Connection:**
@@ -253,40 +228,7 @@ OnlyPlans Calendar - Installation
 6. Done!
 ```
 
-## 📚 Additional Documentation
 
-- **Smart Suggestions Algorithm**: See `SMART_SUGGESTIONS_GUIDE.md`
-- **API Documentation**: See inline comments in PHP files
-- **Database Schema**: See `database_setup.sql`
-
----
-
-
-
-## 📄 License
-
-MIT License - Free to use, modify, and distribute
-
----
-
-## 💡 Tips & Best Practices
-
-### **For Best Performance:**
-- Keep events under 1000 for fast rendering
-- Run Smart Suggestions during off-peak hours for large calendars
-- Use color coding consistently
-
-### **For Collaboration:**
-- Use Docker for team consistency
-- Export/import database backups regularly
-- Document custom modifications
-
-### **For Mobile Access:**
-- Responsive design works on phones/tablets
-- Consider adding PWA features
-- Test on various screen sizes
-
----
 
 ## 🎓 Learning Resources
 
