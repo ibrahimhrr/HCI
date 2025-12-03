@@ -51,15 +51,29 @@ If you prefer manual setup:
 2. install MMAMP (https://www.mamp.info/en/windows/)
    
 3. Setup MMAMP
-   -
+     - once installation process is complete
+     - you will have to first set up the ports you need.
+       - This is a step by step guide on what to do  
+       - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160530.png)
+       - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160640.png)
+       - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160709.png)
+       - Here you would put in the path to the githubr repo
+         - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160733.png)
+       - You start the server now 
+         - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160819.png)
+       - We start the Webpage server
+       - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160904.png)
+     - You will then go over phpMyadmin and import the mydatabase.sql file to set up the database
+       - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160941.png)
 4. Setup Database
-5. 
-6. **Import database:**
+   - 
+6. 
+7. **Import database:**
    - Open phpMyAdmin
    - Create database: `onlyplans`
    - Import: `database_setup.sql`
 
-7. **Configure connection:**
+8. **Configure connection:**
    - Edit `connection.php`
    - Update credentials:
    ```php
@@ -69,12 +83,12 @@ If you prefer manual setup:
    $database = 'onlyplans';
    ```
 
-8. **Start your server:**
+9. **Start your server:**
    - MAMP: Place in `htdocs/HCI`
    - XAMPP: Place in `htdocs/HCI`
    - WAMP: Place in `www/HCI`
 
-9. **Open browser:** `http://localhost:8888`
+10. **Open browser:** `http://localhost:8888`
 
 ---
 
