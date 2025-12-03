@@ -47,13 +47,19 @@ If you prefer manual setup:
 ### **Steps:**
 
 1. **Clone/Download this repository**
-
-2. **Import database:**
+   
+2. install MMAMP (https://www.mamp.info/en/windows/)
+   
+3. Setup MMAMP
+   -
+4. Setup Database
+5. 
+6. **Import database:**
    - Open phpMyAdmin
    - Create database: `onlyplans`
    - Import: `database_setup.sql`
 
-3. **Configure connection:**
+7. **Configure connection:**
    - Edit `connection.php`
    - Update credentials:
    ```php
@@ -63,12 +69,12 @@ If you prefer manual setup:
    $database = 'onlyplans';
    ```
 
-4. **Start your server:**
+8. **Start your server:**
    - MAMP: Place in `htdocs/HCI`
    - XAMPP: Place in `htdocs/HCI`
    - WAMP: Place in `www/HCI`
 
-5. **Open browser:** `http://localhost/HCI/index.php`
+9. **Open browser:** `http://localhost:8888`
 
 ---
 
