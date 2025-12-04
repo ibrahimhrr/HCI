@@ -56,8 +56,9 @@ If you prefer manual setup:
        - This is a step by step guide on what to do  
        - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160530.png)
        - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160640.png)
+       - Set the Port numbers to this 
        - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160709.png)
-       - Here you would put in the path to the githubr repo
+       - Here you would put in the path to the github repo
          - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160733.png)
        - You start the server now 
          - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160819.png)
@@ -65,7 +66,7 @@ If you prefer manual setup:
        - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160904.png)
 
 4. Setup Database
-   - You will then go over phpMyadmin and import the mydatabase.sql file to set up the database
+   - You will then go over phpMyadmin and import the **mydatabase.sql** file to set up the database
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160941.png)
    - Click on the Database button and create a database named mydatabase
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161048.png)
@@ -74,34 +75,8 @@ If you prefer manual setup:
    - Before you import the mydatabase.sql file, you need to first change some code in the file(for some reason this is what needs to be changed in order to work on Windows) and save the  file 
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161333.png)
    - You then click the browse button, locate the file and import it to the database.
-   - Finally to get the application to show up make sure the port is set to the number below:
+   - Finally to get the application to show up make sure the port is set to the number below (Open up the **connection.php** file):
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161523.png)
-
----
-
-## 📁 Project Structure
-
-```
-HCI/
-├── index.php                    # Main calendar interface
-├── createEventForm.php          # Event creation form
-├── createEvent.php              # Event creation backend
-├── updateEvent.php              # Event update backend
-├── deleteEvent.php              # Event deletion backend
-├── bulkDeleteEvents.php         # Bulk deletion
-├── getEvents.php                # Fetch events API
-├── smartSuggestionsForm.php     # Smart suggestions UI
-├── smartSuggestions.php         # Smart suggestions algorithm
-├── connection.php               # Database connection
-├── database_setup.sql           # Database schema
-├── styles.css                   # Global styles
-├── install.php                  # Automated installer
-├── docker-compose.yml           # Docker configuration
-├── connection_sqlite.php        # SQLite alternative
-├── README.md                    # This file
-├── SMART_SUGGESTIONS_GUIDE.md   # Algorithm documentation
-└── js/                          # JavaScript files
-```
 
 ---
 
@@ -140,6 +115,5 @@ HCI/
 - **Uniqueness**: No duplicate slots shown
 
 ---
-
 
 *Version 1.0 - November 2025*
