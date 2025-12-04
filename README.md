@@ -1,8 +1,8 @@
-# 📅 OnlyPlans - Smart Calendar Application
+# OnlyPlans - Smart Calendar Application
 
 A modern, intelligent calendar system with Intelligent time slot suggestions and conflict detection.
 
-## ✨ Features
+## Features
 
 - **Smart Event Scheduling**: Create, edit, and delete events with color coding
 - **Intelligent Suggestions**:  algorithm finds optimal time slots based on:
@@ -17,24 +17,7 @@ A modern, intelligent calendar system with Intelligent time slot suggestions and
 
 ---
 
-## 🚀 Quick Start (3 Options)
-
-### **Option 1: Automated Installer (Easiest)**
-*Best for beginners - No database knowledge needed*
-
-1. **Start your local PHP server** (MAMP/XAMPP/WAMP)
-2. **Open your browser**: `http://localhost/HCI/install.php`
-3. **Follow the wizard**: Enter database credentials (usually `root`/`root`)
-4. **Done!** The installer creates everything automatically
-
-**What it does:**
-- ✅ Creates database automatically
-- ✅ Sets up all tables
-- ✅ Configures connection
-- ✅ Ready in 2 minutes
-
-
-## 📋 Manual Installation (Traditional Method)
+## 📋 Manual Installation (For Windows)
 
 If you prefer manual setup:
 
@@ -42,9 +25,9 @@ If you prefer manual setup:
 - PHP 7.4 or higher
 - MySQL 5.7 or higher
 - Apache/Nginx web server
-- phpMyAdmin (optional, for database management)
+- phpMyAdmin (for database management)
 
-### **Steps:**
+### **Steps: (For Windows)**
 
 1. **Clone/Download this repository**
    
@@ -80,7 +63,7 @@ If you prefer manual setup:
 
 ---
 
-## 🎯 How to Use
+## How to Use
 
 ### **Creating Events:**
 
