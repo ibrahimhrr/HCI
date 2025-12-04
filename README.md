@@ -63,10 +63,19 @@ If you prefer manual setup:
          - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160819.png)
        - We start the Webpage server
        - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160904.png)
-     - You will then go over phpMyadmin and import the mydatabase.sql file to set up the database
-       - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160941.png)
+
 4. Setup Database
-   - 
+   - You will then go over phpMyadmin and import the mydatabase.sql file to set up the database
+     - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160941.png)
+   - Click on the Database button and create a database named mydatabase
+     - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161048.png)
+   - Once Created, You need you now click that database on the right hand side, then move onto the right and select the import section and then click the browse button
+     - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161137.png)
+   - Before you import the mydatabase.sql file, you need to first change some code in the file(for some reason this is what needs to be changed in order to work on Windows) and save the  file 
+     - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161333.png)
+   - You then click the browse button, locate the file and import it to the database.
+   - Finally to get the application to show up make sure the port is set to the number below:
+     - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161523.png)
 6. 
 7. **Import database:**
    - Open phpMyAdmin
