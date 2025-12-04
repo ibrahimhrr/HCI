@@ -72,7 +72,7 @@ If you prefer manual setup:
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161048.png)
    - Once Created, You need you now click that database on the right hand side, then move onto the right and select the import section and then click the browse button
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161137.png)
-   - Before you import the **mydatabase.sql** file, you need to first change some code (_for some reason this is what needs to be changed in order to work on Windows_) and save the  file 
+   - Before you import the **mydatabase.sql** file, you need to first change some code to match the below image (_for some reason this is what needs to be changed in order to work on Windows_) and save the  file 
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161333.png)
    - You then click the browse button, locate the file and import it to the database.
    - Finally to get the application to show up make sure the port is set to the number below (Open up the **connection.php** file):
