@@ -50,7 +50,7 @@ A modern, intelligent calendar system with Intelligent time slot suggestions and
    - Before you import the **mydatabase.sql** file, you need to first change some code to match the below image (_for some reason this is what needs to be changed in order to work on Windows_) and save the  file --> (utf8mb4_unicode_ci)
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161333.png)
    - You then click the browse button, locate the file, import to the database & select go.
-   - Finally to get the application to show up make sure the port is set to the number below (Open up the **connection.php** file):
+   - Finally to get the application to show up make sure the port is set to the number below (Open up the **connection.php** file) & save the file:
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161523.png)
 5. Finally navigate to localhost:8888 and the application should load up.
 ---
