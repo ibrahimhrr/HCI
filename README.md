@@ -19,14 +19,6 @@ A modern, intelligent calendar system with Intelligent time slot suggestions and
 
 ## 📋 Manual Installation (For Windows)
 
-If you prefer manual setup:
-
-### **Requirements:**
-- PHP 7.4 or higher
-- MySQL 5.7 or higher
-- Apache/Nginx web server
-- phpMyAdmin (for database management)
-
 ### **Steps: (For Windows)**
 
 1. **Clone/Download this repository**
@@ -53,14 +45,14 @@ If you prefer manual setup:
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/3921960dd923eb76112b0ceb299315c195c976d6/img/Screenshot%202025-12-03%20160941.png)
    - Click on the Database button and create a database named mydatabase
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161048.png)
-   - Once Created, You need you now click that database on the right hand side, then move onto the right and select the import section and then click the browse button
+   - Once Created, You need to click the database button on the header, select the import section and then click the browse button
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161137.png)
-   - Before you import the **mydatabase.sql** file, you need to first change some code to match the below image (_for some reason this is what needs to be changed in order to work on Windows_) and save the  file 
+   - Before you import the **mydatabase.sql** file, you need to first change some code to match the below image (_for some reason this is what needs to be changed in order to work on Windows_) and save the  file --> (utf8mb4_unicode_ci)
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161333.png)
-   - You then click the browse button, locate the file and import it to the database.
+   - You then click the browse button, locate the file, import to the database & select go.
    - Finally to get the application to show up make sure the port is set to the number below (Open up the **connection.php** file):
      - ![alt text](https://github.com/ibrahimhrr/HCI/blob/28ffacd80655f8a4af7086ec6eefe44368204954/img/Screenshot%202025-12-03%20161523.png)
-
+5. Finally navigate to localhost:8888 and the application should load up.
 ---
 
 ## How to Use
